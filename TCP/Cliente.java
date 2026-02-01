@@ -22,7 +22,7 @@ public class Cliente {
 
             System.out.print("Introduce tu nombre de usuario: ");
             String nombre = teclado.nextLine();
-            salidaServidor.println(nombre); // Enviamos el nombre
+            salidaServidor.println(nombre);
 
 
             Thread hiloEscucha = new Thread(() -> {
@@ -41,7 +41,7 @@ public class Cliente {
             while (true) {
                 String mensajeUsuario = teclado.nextLine();
 
-                // Opción para salir limpiamente (opcional)
+               
                 if (mensajeUsuario.equalsIgnoreCase("/salir")) {
                     break;
                 }
@@ -56,4 +56,5 @@ public class Cliente {
             System.out.println("Error en el cliente: " + e.getMessage());
         }
     }
+
 }
