@@ -9,22 +9,21 @@ public class ClienteHandler extends Thread {
     private BufferedReader entrada;
     private PrintWriter salida;
     private String nombre;
-    // Referencia a la lista compartida del servidor
     private List<PrintWriter> clientesConectados;
 
     public ClienteHandler(Socket socket, List<PrintWriter> clientesConectados) throws IOException {
         this.socket = socket;
-        this.clientesConectados = clientesConectados; // Guardamos referencia a la lista
+        this.clientesConectados = clientesConectados;
 
-        // Inicializar flujos
+       
         entrada = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         salida = new PrintWriter(socket.getOutputStream(), true);
 
-        // 1. El primer mensaje es el nombre
+       
         nombre = entrada.readLine();
 
-        // 2. Añadir este cliente a la lista compartida y avisar
-        synchronized (clientesConectados) { // Sincronizamos para evitar errores de concurrencia
+        
+        synchronized (clientesConectados) {
             clientesConectados.add(salida);
         }
         enviarATodos("🔵 " + nombre + " se ha unido al chat");
@@ -34,14 +33,14 @@ public class ClienteHandler extends Thread {
     public void run() {
         String mensaje;
         try {
-            // Bucle principal de lectura
+           
             while ((mensaje = entrada.readLine()) != null) {
                 enviarATodos("[" + nombre + "]: " + mensaje);
             }
         } catch (IOException e) {
-            // Se ignora excepción al cerrar conexión abruptamente
+            
         } finally {
-            // Limpieza al salir
+           
             synchronized (clientesConectados) {
                 clientesConectados.remove(salida);
             }
@@ -53,10 +52,11 @@ public class ClienteHandler extends Thread {
     }
 
     private void enviarATodos(String mensaje) {
-        synchronized (clientesConectados) { // Bloqueamos la lista mientras la recorremos
+        synchronized (clientesConectados) {
             for (PrintWriter cliente : clientesConectados) {
                 cliente.println(mensaje);
             }
         }
     }
+
 }
