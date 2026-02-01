@@ -26,7 +26,7 @@ public class Cliente {
         });
         hiloEscucha.start();
 
-        System.out.println("Escribe tus mensajes (pulsa Enter para enviar):");
+        System.out.println("Escribe tus mensajes:");
         while (true) {
             String texto = teclado.nextLine();
             byte[] datos = texto.getBytes();
@@ -34,4 +34,5 @@ public class Cliente {
             socket.send(paquete);
         }
     }
+
 }
