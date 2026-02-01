@@ -5,7 +5,6 @@ import java.util.*;
 
 public class Servidor {
 
-    // Clase simple dentro del servidor para guardar datos (como una estructura)
     static class Cliente {
         InetAddress direccion;
         int puerto;
@@ -24,7 +23,6 @@ public class Servidor {
         System.out.println("Servidor escuchando en puerto 5000...");
 
         while (true) {
-            // 1. Recibir paquete
             DatagramPacket paqueteRecibido = new DatagramPacket(buffer, buffer.length);
             socketServidor.receive(paqueteRecibido);
 
@@ -32,24 +30,22 @@ public class Servidor {
             InetAddress ipRecibida = paqueteRecibido.getAddress();
             int puertoRecibido = paqueteRecibido.getPort();
 
-            // 2. Comprobar MANUALMENTE si el cliente existe
+
             boolean existe = false;
             for (Cliente c : listaClientes) {
-                // Comparamos IP y Puerto directamente
+
                 if (c.direccion.equals(ipRecibida) && c.puerto == puertoRecibido) {
                     existe = true;
                     break;
                 }
             }
 
-            // 3. Si no existe, lo añadimos a la lista
             if (!existe) {
                 Cliente nuevo = new Cliente(ipRecibida, puertoRecibido);
                 listaClientes.add(nuevo);
                 System.out.println("Nuevo cliente conectado desde: " + puertoRecibido);
             }
 
-            // 4. Reenviar el mensaje a TODOS los clientes de la lista
             String mensajeFinal = "Cliente " + puertoRecibido + ": " + mensaje;
             byte[] datosEnvia = mensajeFinal.getBytes();
 
@@ -61,4 +57,5 @@ public class Servidor {
             }
         }
     }
+
 }
